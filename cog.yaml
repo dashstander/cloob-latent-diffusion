@@ -1,0 +1,35 @@
+# Configuration for Cog ⚙️
+# Reference: https://github.com/replicate/cog/blob/main/docs/yaml.md
+
+build:
+  # set to true if your model requires a GPU
+  gpu: true 
+
+  # a list of ubuntu apt packages to install
+  system_packages:
+    - "libgl1-mesa-glx"
+    - "libglib2.0-0"
+
+  # python version in the form '3.8' or '3.8.12'
+  python_version: "3.9"
+
+  # a list of packages in the format <package-name>==<version>
+  python_packages:
+    - "einops"
+    - "ftfy"
+    - "omegaconf"
+    - "pillow"
+    - "pycocotools"
+    - "pytorch-lightning"
+    - "regex"
+    - "wandb"
+    # - "torch==1.8.0"
+    # - "torchvision==0.9.0"
+  
+  # commands run after the environment is setup
+  run:
+    - "pip3 install torch==1.10.1+cu113 torchvision==0.11.2+cu113 torchaudio==0.10.1+cu113 -f https://download.pytorch.org/whl/cu113"
+    - "export PYTHONPATH=/src/cloob-training:/src/latent-diffusion:/src/v-diffusion-pytorch:$PYTHONPATH"
+
+# predict.py defines how predictions are run on your model
+predict: "predict.py:Predictor"
