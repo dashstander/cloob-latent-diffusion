@@ -4,32 +4,38 @@
 build:
   # set to true if your model requires a GPU
   gpu: true 
-
+  cuda: "11.3"
   # a list of ubuntu apt packages to install
   system_packages:
     - "libgl1-mesa-glx"
     - "libglib2.0-0"
+    - "wget"
 
   # python version in the form '3.8' or '3.8.12'
   python_version: "3.9"
 
   # a list of packages in the format <package-name>==<version>
   python_packages:
-    - "einops"
-    - "ftfy"
-    - "omegaconf"
-    - "pillow"
-    - "pycocotools"
-    - "pytorch-lightning"
-    - "regex"
-    - "wandb"
-    # - "torch==1.8.0"
-    # - "torchvision==0.9.0"
+    - "einops==0.4.1"
+    - "ftfy==6.1.1"
+    - "omegaconf==2.2.1"
+    - "pillow==9.1.0"
+    - "pycocotools==2.0.4"
+    - "pytorch-lightning==1.6.3"
+    - "regex==2022.4.24"
+    - "wandb==0.12.16"
+    - "torch==1.10.1"
+    - "torchvision==0.11.2"
   
   # commands run after the environment is setup
   run:
-    - "pip3 install torch==1.10.1+cu113 torchvision==0.11.2+cu113 torchaudio==0.10.1+cu113 -f https://download.pytorch.org/whl/cu113"
-    - "export PYTHONPATH=/src/cloob-training:/src/latent-diffusion:/src/v-diffusion-pytorch:$PYTHONPATH"
+    - "export PYTHONPATH=/src/taming-transformers:/src/CLIP:/src/cloob-training:/src/latent-diffusion:/src/v-diffusion-pytorch:$PYTHONPATH"
+    - "mkdir -p /root/.cache/torch/hub/checkpoints/"
+    - "mkdir -p /src/taming-transformers/taming/modules/autoencoder/lpips/"
+    - "wget https://download.pytorch.org/models/vgg16-397923af.pth -O /root/.cache/torch/hub/checkpoints/vgg16-397923af.pth"
+    - "wget https://heibox.uni-heidelberg.de/f/607503859c864bc1b30b/?dl=1 -O /src/taming-transformers/taming/modules/autoencoder/lpips/vgg.pth"
 
 # predict.py defines how predictions are run on your model
-predict: "predict.py:Predictor"
+predict: "cog_predict.py:LatentDiffusionGenerator"
+
+
